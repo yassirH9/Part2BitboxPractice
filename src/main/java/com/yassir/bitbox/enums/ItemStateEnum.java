@@ -1,4 +1,4 @@
-package com.yassir.bitbox.model;
+package com.yassir.bitbox.enums;
 
 public enum ItemStateEnum {
     ACTIVE,

@@ -1,4 +1,4 @@
-package com.yassir.bitbox.models.products;
+package com.yassir.bitbox.models.Item;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,4 +30,8 @@ public class Supplier {
 
     @ManyToMany(mappedBy = "suppliers")
     private Set<Item> items;
+
+    public void addItem(Item item){
+        this.items.add(item);
+    }
 }

@@ -1,4 +1,4 @@
-package com.yassir.bitbox.model.users;
+package com.yassir.bitbox.enums;
 
 public enum UserPrivilegesEnum {
     USER,

@@ -1,7 +1,7 @@
-package com.yassir.bitbox.models.products;
+package com.yassir.bitbox.models.Item;
 
 import com.yassir.bitbox.enums.ItemStateEnum;
-import com.yassir.bitbox.models.users.User;
+import com.yassir.bitbox.models.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class Item {
     private String description;
 
     @Column(name = "price", nullable = false)
-    private Long price;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
@@ -50,6 +50,7 @@ public class Item {
     private Set<PriceReduction> priceReductions;
 
     @Column(name = "creationDate")
+    @Temporal(TemporalType.DATE)
     private Date creationDate;
 
     // One-to-many relationship (an item can have one creator)

@@ -1,14 +1,11 @@
-package com.yassir.bitbox.models.users;
+package com.yassir.bitbox.models.user;
 
 import com.yassir.bitbox.enums.UserPrivilegesEnum;
-import com.yassir.bitbox.models.Item.Item;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
 
 
 //---lombok---
@@ -24,7 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId", unique = true)
     private Long id;
-    @Column(name = "userName", nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String userName;
     @Column(name = "password", nullable = false)
     private String password;

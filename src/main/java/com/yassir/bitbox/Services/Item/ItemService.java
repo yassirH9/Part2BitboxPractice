@@ -1,13 +1,15 @@
-package com.yassir.bitbox.Services;
+package com.yassir.bitbox.Services.Item;
 
-import com.yassir.bitbox.models.products.Item;
-import com.yassir.bitbox.models.products.PriceReduction;
-import com.yassir.bitbox.models.products.Supplier;
+import com.yassir.bitbox.dto.item.ItemDTO;
+import com.yassir.bitbox.dto.item.PriceReductionDTO;
+import com.yassir.bitbox.dto.item.SupplierDTO;
+
+import java.util.List;
 
 public interface ItemService {
-    Item getItems();
-    Item getItemByCode(Long itemCode);
-    void addSupplier(Long itemCode, Supplier supplier);
-    void addDiscount(Long ItemCode, PriceReduction priceReduction);
-    void saveItem(Item item);
+    List<ItemDTO> getItems();
+    ItemDTO getItemByCode(Long itemCode);
+    void addSupplier(Long itemCode, SupplierDTO supplier);
+    void addDiscount(Long itemCode, PriceReductionDTO priceReduction);
+    void saveItem(ItemDTO item);
 }

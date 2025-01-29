@@ -1,9 +1,11 @@
-package com.yassir.bitbox.controllers.item;
+package com.yassir.bitbox.controllers;
 
 import com.yassir.bitbox.Services.Item.DefaultItemService;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +19,13 @@ public class ItemRestController {
     @Autowired
     private DefaultItemService itemService;
 
+    private static final Logger logger = LoggerFactory.getLogger(ItemRestController.class);
+
     @GetMapping("/")
     public List<ItemDTO> getAllItems(){
         return itemService.getItems();
     }
-    @GetMapping("/({code}")
+    @GetMapping("/{code}")
     public ResponseEntity<ItemDTO> getItem(@PathVariable Long code){
         ItemDTO item = itemService.getItemByCode(code);
         if(item!=null){
@@ -36,10 +40,10 @@ public class ItemRestController {
             itemService.saveItem(itemDTO);
             return new ResponseEntity<>("saved", HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Something went wrong with the request and the item was unable to be saved: ", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Something went wrong with the request and the item was unable to be saved: "+e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/suppliers/{itemCode}")
+    @PostMapping("/suppliers/{code}")
     public ResponseEntity<String> addSupplier(@RequestBody SupplierDTO supplierDTO, @PathVariable Long code){
         try{
             itemService.addSupplier(code,supplierDTO);
