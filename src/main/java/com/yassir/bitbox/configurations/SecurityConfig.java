@@ -40,12 +40,6 @@ public class SecurityConfig {
     public CustomUserDetailsService userDetailsService() {
         return new CustomUserDetailsService(IUserRepository);
     }
-//    @Bean
-//    public ModelMapper modelMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        modelMapper.getConfiguration().setDeepCopyEnabled(false);
-//        return modelMapper;
-//    }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

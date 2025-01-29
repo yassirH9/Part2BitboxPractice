@@ -52,30 +52,7 @@ public class DefaultItemService implements ItemService{
     }
 
     @Override
-    @Transactional
     public void addSupplier(Long itemCode, SupplierDTO supplier) {
-        //this one work creating new ones and adding it
-//        if(supplier.getSupplierCode()== null){
-//            //----------------------------------------
-//            // THIS OVERALL WORK
-//            //----------------------------------------
-//
-//            Supplier suppTemp = mmapper.map(supplier,Supplier.class);
-//
-//            suppTemp.addItem(itemRepository.findById(itemCode).orElse(null));
-//
-//
-//            Item itemTemp = itemRepository.findById(itemCode).orElse(null);
-//            assert itemTemp != null;
-//            itemTemp.addSupplier(suppTemp);
-//
-//            supplierRepository.save(suppTemp);
-//            itemRepository.save(itemTemp);
-//        }else{
-//
-//        }
-
-
         // Fetch the item by its ID
         Item item = itemRepository.findById(itemCode)
                 .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));
