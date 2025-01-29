@@ -12,6 +12,7 @@ import com.yassir.bitbox.repositories.IItemRepository;
 import com.yassir.bitbox.repositories.IPriceReductionRepository;
 import com.yassir.bitbox.repositories.ISupplierRepository;
 import com.yassir.bitbox.repositories.IUserRepository;
+import jakarta.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,27 +52,54 @@ public class DefaultItemService implements ItemService{
     }
 
     @Override
+    @Transactional
     public void addSupplier(Long itemCode, SupplierDTO supplier) {
         //this one work creating new ones and adding it
-        if(supplier.getSupplierCode()== null){
-            //----------------------------------------
-            // THIS OVERALL WORK
-            //----------------------------------------
+//        if(supplier.getSupplierCode()== null){
+//            //----------------------------------------
+//            // THIS OVERALL WORK
+//            //----------------------------------------
+//
+//            Supplier suppTemp = mmapper.map(supplier,Supplier.class);
+//
+//            suppTemp.addItem(itemRepository.findById(itemCode).orElse(null));
+//
+//
+//            Item itemTemp = itemRepository.findById(itemCode).orElse(null);
+//            assert itemTemp != null;
+//            itemTemp.addSupplier(suppTemp);
+//
+//            supplierRepository.save(suppTemp);
+//            itemRepository.save(itemTemp);
+//        }else{
+//
+//        }
 
-            Supplier suppTemp = mmapper.map(supplier,Supplier.class);
 
-            suppTemp.addItem(itemRepository.findById(itemCode).orElse(null));
+        // Fetch the item by its ID
+        Item item = itemRepository.findById(itemCode)
+                .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));
 
+        Supplier supplierPojo;
 
-            Item itemTemp = itemRepository.findById(itemCode).orElse(null);
-            assert itemTemp != null;
-            itemTemp.addSupplier(suppTemp);
-
-            supplierRepository.save(suppTemp);
-            itemRepository.save(itemTemp);
-        }else{
-
+        if (supplier.getSupplierCode() == null) {
+            // New supplier (no ID provided)
+            supplierPojo = mmapper.map(supplier, Supplier.class);
+        } else {
+            // Existing supplier (ID provided)
+            supplierPojo = supplierRepository.findById(supplier.getSupplierCode())
+                    .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + supplier.getSupplierCode()));
         }
+
+        // Add the supplier to the item
+        item.addSupplier(supplierPojo);
+
+        // Add the item to the supplier to maintain bidirectional consistency
+        supplierPojo.addItem(item);
+
+        // Save changes
+        supplierRepository.save(supplierPojo); // Saves the supplier
+        itemRepository.save(item);  // Saves the item
     }
 
     @Override
