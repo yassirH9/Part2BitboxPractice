@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 //---lombok---
@@ -29,10 +30,4 @@ public class ItemDTO {
     private Date creationDate;
     private UserDTO creator;
 
-    public void addSupplier(SupplierDTO supplier) {
-        this.suppliers.add(supplier);
-    }
-    public void addPriceReduction(PriceReductionDTO priceReduction){
-        this.priceReductions.add(priceReduction);
-    }
 }

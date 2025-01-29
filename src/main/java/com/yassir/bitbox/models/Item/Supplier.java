@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 //---lombok---
@@ -32,6 +33,11 @@ public class Supplier {
     private Set<Item> items;
 
     public void addItem(Item item){
-        this.items.add(item);
+        if(this.items==null){
+            this.items = new HashSet<Item>();
+            this.items.add(item);
+        }else{
+            this.items.add(item);
+        }
     }
 }

@@ -15,6 +15,7 @@ import com.yassir.bitbox.repositories.IUserRepository;
 import org.hibernate.HibernateException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,24 +52,26 @@ public class DefaultItemService implements ItemService{
 
     @Override
     public void addSupplier(Long itemCode, SupplierDTO supplier) {
-//        Item item = itemRepository.findById(itemCode).orElse(null);
-//        if(item!=null){
-//            if(supplier.getSupplierCode()!=null && supplier.getName()==null){
-//                //the supplier exist need to be associated
-//                supplierRepository.findById(supplier.getSupplierCode()).ifPresent(suppTemp -> {
-//                    Item itemTemp = itemRepository.findById(itemCode).orElse(null);
-//
-//                    assert itemTemp != null;
-//                    itemTemp.addSupplier(suppTemp);
-//                    itemRepository.save(itemTemp);
-//                });
-//            }else{
-//                //the supplier does not exist and need to be saved
-//                supplierRepository.save(mmapper.map(supplier,Supplier.class));
-//            }
-//        }else{
-//            throw new HibernateException("There's no item with such code: "+itemCode);
-//        }
+        //this one work creating new ones and adding it
+        if(supplier.getSupplierCode()== null){
+            //----------------------------------------
+            // THIS OVERALL WORK
+            //----------------------------------------
+
+            Supplier suppTemp = mmapper.map(supplier,Supplier.class);
+
+            suppTemp.addItem(itemRepository.findById(itemCode).orElse(null));
+
+
+            Item itemTemp = itemRepository.findById(itemCode).orElse(null);
+            assert itemTemp != null;
+            itemTemp.addSupplier(suppTemp);
+
+            supplierRepository.save(suppTemp);
+            itemRepository.save(itemTemp);
+        }else{
+
+        }
     }
 
     @Override

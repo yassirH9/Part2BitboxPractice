@@ -49,7 +49,7 @@ public class ItemRestController {
             itemService.addSupplier(code,supplierDTO);
             return new ResponseEntity<>("added", HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Something went wrong with the request and the supplier was unable to be added to item with code: "+code, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Something went wrong with the request and the supplier was unable to be added to item with code: "+code+" ERROR:"+e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
     @PostMapping("/discount/{itemCode}")
