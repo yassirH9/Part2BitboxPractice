@@ -21,10 +21,10 @@ import java.util.Set;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "itemCode", unique = true)
+    @Column(name = "itemCode", unique = true, nullable = false)
     private Long itemCode;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "price", nullable = false)
@@ -49,7 +49,7 @@ public class Item {
 
     // One-to-many relationship (an item can have one creator)
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId")
     private User creator;
 
     //------------------------------------

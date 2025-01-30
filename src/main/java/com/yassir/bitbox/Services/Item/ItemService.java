@@ -9,8 +9,9 @@ import java.util.List;
 public interface ItemService {
     List<ItemDTO> getItems();
     ItemDTO getItemByCode(Long itemCode);
-    void addSupplier(Long itemCode, SupplierDTO supplier);
-    void addDiscount(Long itemCode, PriceReductionDTO priceReduction);
-    void saveItem(ItemDTO item);
+    void addSupplier(Long itemCode, SupplierDTO supplierDTO);
+    void addDiscount(Long itemCode, PriceReductionDTO priceReductionDTO);
+    void saveItem(ItemDTO itemDTO);
     void delete(Long itemCode);
+    void update(Long itemCode, ItemDTO itemDTO);
 }

@@ -20,13 +20,13 @@ public class DefaultUserService implements UserService{
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void save(UserDTO user) {
-        if(user!=null){
+    public void save(UserDTO userDTO) {
+        if(userDTO !=null){
             //bcript the password before create the user
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             //while the moment this isn't a full example every registered user will be designated with USER role
-            user.setPrivileges(UserPrivilegesEnum.USER);
-            userRepository.save(MapperUtility.toUserPOJO(user));
+            userDTO.setPrivileges(UserPrivilegesEnum.USER);
+            userRepository.save(MapperUtility.toUserPOJO(userDTO));
         }else{
             throw new HibernateException("Invalid user credentials");
         }
@@ -43,9 +43,9 @@ public class DefaultUserService implements UserService{
     }
 
     @Override
-    public boolean isValid(UserDTO user) {
-        return !user.getUserName().isEmpty() ||
-                user.getPrivileges() != null || !user.getPassword().isEmpty();
+    public boolean isValid(UserDTO userDTO) {
+        return !userDTO.getUserName().isEmpty() ||
+                userDTO.getPrivileges() != null || !userDTO.getPassword().isEmpty();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.yassir.bitbox.Services.Item;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
+import com.yassir.bitbox.enums.ItemStateEnum;
 import com.yassir.bitbox.models.Item.Item;
 import com.yassir.bitbox.models.Item.PriceReduction;
 import com.yassir.bitbox.models.Item.Supplier;
@@ -74,17 +75,39 @@ public class DefaultItemService implements ItemService{
     }
 
     @Override
-    public void saveItem(ItemDTO item) {
-        item.setSuppliers(new HashSet<>());
-        item.setPriceReductions(new HashSet<>());
-        item.setCreationDate(new Date());
-        //In the case of: item has a user associated by id will find the user to make the whole relation
-        if(item.getCreator().getId()!=null){
-            User userTemp = userRepository.findById(item.getCreator().getId()).orElse(null);
-            assert userTemp != null;
-            item.setCreator(MapperUtility.toUserDTO(userTemp));
+    public void update(Long itemCode, ItemDTO itemDTO) {
+        Item itemPojo = itemRepository.findById(itemCode).orElse(null);
+        if(itemPojo != null){
+            //** temporary
+            if (itemDTO.getDescription() != null) {
+                itemPojo.setDescription(itemDTO.getDescription());
+            }
+            if(itemDTO.getPrice() != null){
+                itemPojo.setPrice(itemDTO.getPrice());
+            }
+            if(itemDTO.getState() != null){
+                itemPojo.setState(itemDTO.getState());
+            }
+            itemRepository.save(itemPojo);
         }
-        itemRepository.save(MapperUtility.toItemPOJO(item));
+    }
+
+    @Override
+    public void saveItem(ItemDTO itemDTO) {
+        itemDTO.setSuppliers(new HashSet<>());
+        itemDTO.setPriceReductions(new HashSet<>());
+        itemDTO.setCreationDate(new Date());
+        //default state should be active, see if state is null to set it down
+        if(itemDTO.getState() == null){
+            itemDTO.setState(ItemStateEnum.ACTIVE);
+        }
+        //In the case of: item has a user associated by id will find the user to make the whole relation
+        if(itemDTO.getCreator().getId()!=null){
+            User userTemp = userRepository.findById(itemDTO.getCreator().getId()).orElse(null);
+            assert userTemp != null;
+            itemDTO.setCreator(MapperUtility.toUserDTO(userTemp));
+        }
+        itemRepository.save(MapperUtility.toItemPOJO(itemDTO));
     }
 
     //---------------------------------------------------------------------------------------------
@@ -92,20 +115,20 @@ public class DefaultItemService implements ItemService{
     //---------------------------------------------------------------------------------------------
 
     @Override
-    public void addSupplier(Long itemCode, SupplierDTO supplier) {
+    public void addSupplier(Long itemCode, SupplierDTO supplierDTO) {
         // Fetch the item by its ID
         Item item = itemRepository.findById(itemCode)
                 .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));
 
         Supplier supplierPojo;
 
-        if (supplier.getSupplierCode() == null) {
+        if (supplierDTO.getSupplierCode() == null) {
             // New supplier (no ID provided)
-            supplierPojo = MapperUtility.toSupplierPOJO(supplier);
+            supplierPojo = MapperUtility.toSupplierPOJO(supplierDTO);
         } else {
             // Existing supplier (ID provided)
-            supplierPojo = supplierRepository.findById(supplier.getSupplierCode())
-                    .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + supplier.getSupplierCode()));
+            supplierPojo = supplierRepository.findById(supplierDTO.getSupplierCode())
+                    .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + supplierDTO.getSupplierCode()));
         }
 
         // Add the supplier to the item
@@ -120,21 +143,21 @@ public class DefaultItemService implements ItemService{
     }
 
     @Override
-    public void addDiscount(Long itemCode, PriceReductionDTO priceReduction) {
-        priceReduction.setStartDate(new Date());
+    public void addDiscount(Long itemCode, PriceReductionDTO priceReductionDTO) {
+        priceReductionDTO.setStartDate(new Date());
         // Fetch the item by its ID
         Item item = itemRepository.findById(itemCode)
                 .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));
 
         PriceReduction priceReductionPojo;
 
-        if (priceReduction.getId()== null) {
+        if (priceReductionDTO.getId()== null) {
             // New supplier (no ID provided)
-            priceReductionPojo = MapperUtility.toPriceReductionPOJO(priceReduction);
+            priceReductionPojo = MapperUtility.toPriceReductionPOJO(priceReductionDTO);
         } else {
             // Existing supplier (ID provided)
-            priceReductionPojo = priceReductionRepository.findById(priceReduction.getId())
-                    .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + priceReduction.getId()));
+            priceReductionPojo = priceReductionRepository.findById(priceReductionDTO.getId())
+                    .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + priceReductionDTO.getId()));
         }
 
         // Add the price reduction to the item
