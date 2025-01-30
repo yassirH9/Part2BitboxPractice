@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-
-import java.sql.SQLType;
 import java.util.Date;
 
 //---lombok---
@@ -24,9 +21,9 @@ public class PriceReduction {
     @Column(name = "priceReduction", unique = true)
     private Long id;
     @Column(name = "reducedPrice", nullable = false)
-    private Long reducedPrice;
+    private Double reducedPrice;
     @Column(name = "startDate", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     @Column(name = "finishDate", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -34,4 +31,10 @@ public class PriceReduction {
     @ManyToOne
     @JoinColumn(name = "itemCode", nullable = false)
     private Item item;
+
+    public void addItem(Item item){
+        if(this.item==null){
+            this.item = item;
+        }
+    }
 }

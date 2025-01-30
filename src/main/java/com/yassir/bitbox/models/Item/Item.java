@@ -3,10 +3,7 @@ package com.yassir.bitbox.models.Item;
 import com.yassir.bitbox.enums.ItemStateEnum;
 import com.yassir.bitbox.models.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -21,6 +18,7 @@ import java.util.Set;
 //-------------
 @Entity
 @Table(name="Items")
+@Builder // inicialize all
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +36,8 @@ public class Item {
     private ItemStateEnum state;
 
     // Many-to-many relationship between item and supplier
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "item_provided",
-            joinColumns = @JoinColumn(name = "itemCode"),
-            inverseJoinColumns = @JoinColumn(name = "supplierCode")
-    )
+
+    @ManyToMany(mappedBy = "items",  cascade = CascadeType.ALL)
     private Set<Supplier> suppliers;
 
     // One-to-many relationship (any item can hold many discounts)

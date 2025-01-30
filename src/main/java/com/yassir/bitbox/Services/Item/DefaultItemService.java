@@ -3,7 +3,6 @@ package com.yassir.bitbox.Services.Item;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
-import com.yassir.bitbox.dto.user.UserDTO;
 import com.yassir.bitbox.models.Item.Item;
 import com.yassir.bitbox.models.Item.PriceReduction;
 import com.yassir.bitbox.models.Item.Supplier;
@@ -12,16 +11,15 @@ import com.yassir.bitbox.repositories.IItemRepository;
 import com.yassir.bitbox.repositories.IPriceReductionRepository;
 import com.yassir.bitbox.repositories.ISupplierRepository;
 import com.yassir.bitbox.repositories.IUserRepository;
-import jakarta.transaction.Transactional;
+import com.yassir.bitbox.utils.MapperUtility;
 import org.hibernate.HibernateException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -34,22 +32,68 @@ public class DefaultItemService implements ItemService{
     private ISupplierRepository supplierRepository;
     @Autowired
     private IPriceReductionRepository priceReductionRepository;
-    @Autowired
-    private ModelMapper mmapper; //= new org.modelmapper.ModelMapper();
+
 
     @Override
     public List<ItemDTO> getItems() {
         List<ItemDTO> result = new ArrayList<>();
         for(Item i: itemRepository.findAll()){
-           result.add(mmapper.map(i,ItemDTO.class));
+           result.add(MapperUtility.toItemDTO(i));
         }
         return result;
     }
 
     @Override
     public ItemDTO getItemByCode(Long itemCode) {
-        return mmapper.map(itemRepository.findById(itemCode),ItemDTO.class);
+        Item item = itemRepository.findById(itemCode).orElse(null);
+        if(item!=null){
+            return MapperUtility.toItemDTO(item);
+        }else{
+            return null;
+        }
     }
+
+    @Override
+    public void delete(Long itemCode) {
+
+        if(itemCode != null){
+            Item itemTemp = itemRepository.findById(itemCode).orElse(null);
+            if (itemTemp != null) {
+                //REMOVE ASSOCIATIONS IN THE JOIN TABLE
+//                itemTemp.getSuppliers().forEach(supplier -> supplier.getItems().remove(itemTemp));
+                itemTemp.getSuppliers().clear();
+
+
+                itemRepository.delete(itemTemp);
+            }else {
+                throw new HibernateException("Theres no item with such code: " + itemCode);
+            }
+        }else{
+            throw new HibernateException("ItemCode can't be null");
+        }
+    }
+
+    @Override
+    public void saveItem(ItemDTO item) {
+        item.setSuppliers(new HashSet<>());
+        item.setPriceReductions(new HashSet<>());
+        item.setCreationDate(new Date());
+        if(item!=null){
+            //In the case of: item has a user associated by id will find the user to make the whole relation
+            if(item.getCreator().getId()!=null){
+                User userTemp = userRepository.findById(item.getCreator().getId()).orElse(null);
+                assert userTemp != null;
+                item.setCreator(MapperUtility.toUserDTO(userTemp));
+            }
+            itemRepository.save(MapperUtility.toItemPOJO(item));
+        }else{
+            throw new HibernateException("Not null objects admited");
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //                                 ADDERS FOR ITEMS         ++Might need to be in other service
+    //---------------------------------------------------------------------------------------------
 
     @Override
     public void addSupplier(Long itemCode, SupplierDTO supplier) {
@@ -61,7 +105,7 @@ public class DefaultItemService implements ItemService{
 
         if (supplier.getSupplierCode() == null) {
             // New supplier (no ID provided)
-            supplierPojo = mmapper.map(supplier, Supplier.class);
+            supplierPojo = MapperUtility.toSupplierPOJO(supplier);
         } else {
             // Existing supplier (ID provided)
             supplierPojo = supplierRepository.findById(supplier.getSupplierCode())
@@ -72,7 +116,7 @@ public class DefaultItemService implements ItemService{
         item.addSupplier(supplierPojo);
 
         // Add the item to the supplier to maintain bidirectional consistency
-        supplierPojo.addItem(item);
+//        supplierPojo.addItem(item);
 
         // Save changes
         supplierRepository.save(supplierPojo); // Saves the supplier
@@ -81,28 +125,30 @@ public class DefaultItemService implements ItemService{
 
     @Override
     public void addDiscount(Long itemCode, PriceReductionDTO priceReduction) {
-//        Item itemTemp = itemRepository.findById(itemCode).orElse(null);
-//        if(itemTemp!=null){
-//            itemTemp.addPriceReduction(mapper.priceReductionDTOToPriceReduction(priceReduction));
-//        }else{
-//            throw new HibernateException("Not item found with code: "+itemCode);
-//        }
-        //***-----------------------------------------------------------------
-        // might need a save statement not sure if the context save the object
-        //--------------------------------------------------------------------
-    }
+        // Fetch the item by its ID
+        Item item = itemRepository.findById(itemCode)
+                .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));
 
-    @Override
-    public void saveItem(ItemDTO item) {
-        if(item!=null){
-            //In the case of: item has a user associated by id will find the user to make the whole relation
-            if(item.getCreator().getId()!=null){
-                User userTemp = userRepository.findById(item.getCreator().getId()).orElse(null);
-                item.setCreator(mmapper.map(userTemp, UserDTO.class));
-            }
-            itemRepository.save(mmapper.map(item,Item.class));
-        }else{
-            throw new HibernateException("Not null objects admited");
+        PriceReduction priceReductionPojo;
+
+        if (priceReduction.getId()== null) {
+            // New supplier (no ID provided)
+            priceReductionPojo = MapperUtility.toPriceReductionPOJO(priceReduction);
+        } else {
+            // Existing supplier (ID provided)
+            priceReductionPojo = priceReductionRepository.findById(priceReduction.getId())
+                    .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + priceReduction.getId()));
         }
+
+        // Add the price reduction to the item
+        item.addPriceReduction(priceReductionPojo);
+
+        // Add the item to the pricereduction to maintain bidirectional consistency
+//        priceReductionPojo.addItem(item);
+
+        // Save changes
+        priceReductionRepository.save(priceReductionPojo); // Saves the supplier
+        itemRepository.save(item);  // Saves the item
+
     }
 }

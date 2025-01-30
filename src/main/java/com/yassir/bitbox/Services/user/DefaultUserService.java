@@ -5,6 +5,7 @@ import com.yassir.bitbox.enums.UserPrivilegesEnum;
 
 import com.yassir.bitbox.models.user.User;
 import com.yassir.bitbox.repositories.IUserRepository;
+import com.yassir.bitbox.utils.MapperUtility;
 import org.hibernate.HibernateException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,6 @@ public class DefaultUserService implements UserService{
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ModelMapper mmapper;
-
     @Override
     public void save(UserDTO user) {
         if(user!=null){
@@ -29,7 +27,7 @@ public class DefaultUserService implements UserService{
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             //while the moment this isn't a full example every registered user will be designated with USER role
             user.setPrivileges(UserPrivilegesEnum.USER);
-            userRepository.save(mmapper.map(user,User.class));
+            userRepository.save(MapperUtility.toUserPOJO(user));
         }else{
             throw new HibernateException("Invalid user credentials");
         }
@@ -53,11 +51,6 @@ public class DefaultUserService implements UserService{
 
     @Override
     public UserDTO getUser(String username) {
-        UserDTO user = mmapper.map(userRepository.findByuserName(username),UserDTO.class);
-        if(user != null){
-            return user;
-        }else{
-            throw new HibernateException("Not user find with name: "+username);
-        }
+        return MapperUtility.toUserDTO(userRepository.findByuserName(username));
     }
 }

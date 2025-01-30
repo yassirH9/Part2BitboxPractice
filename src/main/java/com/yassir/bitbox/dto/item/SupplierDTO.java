@@ -13,6 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 //-------------
 @Data
 @JsonIgnoreProperties(value = {"items"}, allowGetters = false, allowSetters = true)
@@ -20,5 +21,5 @@ public class SupplierDTO {
     private Long supplierCode;
     private String name;
     private String country;
-    private Set<ItemDTO> items;
+    private Set<ItemDTO> items ;
 }

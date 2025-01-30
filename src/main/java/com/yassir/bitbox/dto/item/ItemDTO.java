@@ -18,6 +18,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 //-------------
 @Data
 public class ItemDTO {
@@ -29,5 +30,4 @@ public class ItemDTO {
     private Set<PriceReductionDTO> priceReductions;
     private Date creationDate;
     private UserDTO creator;
-
 }

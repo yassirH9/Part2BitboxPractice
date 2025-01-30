@@ -1,10 +1,7 @@
 package com.yassir.bitbox.models.Item;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 //-------------
 @Entity
 @Table(name = "suppliers")
@@ -29,7 +27,13 @@ public class Supplier {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @ManyToMany(mappedBy = "suppliers")
+//    due to bidireccional relationships and problems with maps
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "item_provided",
+            joinColumns = @JoinColumn(name = "supplierCode"),
+            inverseJoinColumns = @JoinColumn(name = "itemCode")
+    )
     private Set<Item> items;
 
     public void addItem(Item item){

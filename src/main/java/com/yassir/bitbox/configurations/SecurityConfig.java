@@ -2,19 +2,26 @@ package com.yassir.bitbox.configurations;
 
 import com.yassir.bitbox.Services.user.CustomUserDetailsService;
 import com.yassir.bitbox.dto.item.ItemDTO;
+import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
+import com.yassir.bitbox.dto.user.UserDTO;
 import com.yassir.bitbox.models.Item.Item;
+import com.yassir.bitbox.models.Item.PriceReduction;
 import com.yassir.bitbox.models.Item.Supplier;
+import com.yassir.bitbox.models.user.User;
 import com.yassir.bitbox.repositories.IUserRepository;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -44,29 +51,4 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-
-        // Custom mapping for Item to ItemDTO
-        modelMapper.typeMap(Item.class, ItemDTO.class).addMappings(mapper -> {
-            mapper.map(Item::getItemCode, ItemDTO::setItemCode);
-            mapper.map(Item::getDescription, ItemDTO::setDescription);
-            mapper.map(Item::getSuppliers, ItemDTO::setSuppliers);
-        });
-
-        // Custom mapping for Supplier to SupplierDTO
-        modelMapper.typeMap(Supplier.class, SupplierDTO.class).addMappings(mapper -> {
-            mapper.map(Supplier::getSupplierCode, SupplierDTO::setSupplierCode);
-            mapper.map(Supplier::getName, SupplierDTO::setName);
-            mapper.map(Supplier::getCountry, SupplierDTO::setCountry);
-
-            // Avoid recursive mapping for items in SupplierDTO
-            mapper.skip(SupplierDTO::setItems);
-        });
-
-        return modelMapper;
-    }
-
 }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,8 +19,6 @@ import java.util.List;
 public class ItemRestController {
     @Autowired
     private DefaultItemService itemService;
-
-    private static final Logger logger = LoggerFactory.getLogger(ItemRestController.class);
 
     @GetMapping("/")
     public List<ItemDTO> getAllItems(){
@@ -43,22 +42,37 @@ public class ItemRestController {
             return new ResponseEntity<>("Something went wrong with the request and the item was unable to be saved: "+e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @DeleteMapping("/delete/{code}")
+    public ResponseEntity<String> deleteItem(@PathVariable Long code){
+        try{
+            itemService.delete(code);
+            return new ResponseEntity<>("Deleted item with code: "+code+" successfully", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("An exception has occurred during the delete process: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------
+    //                      ADDERS FOR ITEMS            ++Might need to be in other restcontroller
+    //--------------------------------------------------------------------------------------------
+
     @PostMapping("/suppliers/{code}")
     public ResponseEntity<String> addSupplier(@RequestBody SupplierDTO supplierDTO, @PathVariable Long code){
         try{
             itemService.addSupplier(code,supplierDTO);
-            return new ResponseEntity<>("added", HttpStatus.OK);
+            return new ResponseEntity<>("Added", HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Something went wrong with the request and the supplier was unable to be added to item with code: "+code+" ERROR:"+e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Something went wrong with the request and the supplier was unable to be Added to item with code: "+code+" ERROR:"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/discount/{itemCode}")
+    @PostMapping("/discount/{code}")
     public ResponseEntity<String> addDiscount(@RequestBody PriceReductionDTO priceReductionDTO, @PathVariable Long code){
         try{
+            priceReductionDTO.setStartDate(new Date());
             itemService.addDiscount(code,priceReductionDTO);
-            return new ResponseEntity<>("added", HttpStatus.OK);
+            return new ResponseEntity<>("Added", HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Something went wrong with the request and the discount was unable to be added to item with code: "+code, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Something went wrong with the request and the discount was unable to be Added to item with code: "+code+" ERROR:"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

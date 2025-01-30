@@ -12,4 +12,5 @@ public interface ItemService {
     void addSupplier(Long itemCode, SupplierDTO supplier);
     void addDiscount(Long itemCode, PriceReductionDTO priceReduction);
     void saveItem(ItemDTO item);
+    void delete(Long itemCode);
 }
