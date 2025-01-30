@@ -37,10 +37,10 @@ public class Supplier {
     private Set<Item> items;
 
     public void addItem(Item item){
-        if(this.items==null){
-            this.items = new HashSet<Item>();
-            this.items.add(item);
-        }else{
+        if(item!=null){
+            if(this.items ==null){
+                this.items = new HashSet<>();
+            }
             this.items.add(item);
         }
     }

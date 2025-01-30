@@ -60,7 +60,7 @@ public class DefaultItemService implements ItemService{
             Item itemTemp = itemRepository.findById(itemCode).orElse(null);
             if (itemTemp != null) {
                 //REMOVE ASSOCIATIONS IN THE JOIN TABLE
-//                itemTemp.getSuppliers().forEach(supplier -> supplier.getItems().remove(itemTemp));
+                itemTemp.getSuppliers().forEach(supplier -> supplier.getItems().remove(itemTemp));
                 itemTemp.getSuppliers().clear();
 
 
@@ -78,17 +78,13 @@ public class DefaultItemService implements ItemService{
         item.setSuppliers(new HashSet<>());
         item.setPriceReductions(new HashSet<>());
         item.setCreationDate(new Date());
-        if(item!=null){
-            //In the case of: item has a user associated by id will find the user to make the whole relation
-            if(item.getCreator().getId()!=null){
-                User userTemp = userRepository.findById(item.getCreator().getId()).orElse(null);
-                assert userTemp != null;
-                item.setCreator(MapperUtility.toUserDTO(userTemp));
-            }
-            itemRepository.save(MapperUtility.toItemPOJO(item));
-        }else{
-            throw new HibernateException("Not null objects admited");
+        //In the case of: item has a user associated by id will find the user to make the whole relation
+        if(item.getCreator().getId()!=null){
+            User userTemp = userRepository.findById(item.getCreator().getId()).orElse(null);
+            assert userTemp != null;
+            item.setCreator(MapperUtility.toUserDTO(userTemp));
         }
+        itemRepository.save(MapperUtility.toItemPOJO(item));
     }
 
     //---------------------------------------------------------------------------------------------
@@ -114,9 +110,9 @@ public class DefaultItemService implements ItemService{
 
         // Add the supplier to the item
         item.addSupplier(supplierPojo);
-
         // Add the item to the supplier to maintain bidirectional consistency
-//        supplierPojo.addItem(item);
+        supplierPojo.addItem(item);
+
 
         // Save changes
         supplierRepository.save(supplierPojo); // Saves the supplier
@@ -125,6 +121,7 @@ public class DefaultItemService implements ItemService{
 
     @Override
     public void addDiscount(Long itemCode, PriceReductionDTO priceReduction) {
+        priceReduction.setStartDate(new Date());
         // Fetch the item by its ID
         Item item = itemRepository.findById(itemCode)
                 .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));
@@ -144,7 +141,7 @@ public class DefaultItemService implements ItemService{
         item.addPriceReduction(priceReductionPojo);
 
         // Add the item to the pricereduction to maintain bidirectional consistency
-//        priceReductionPojo.addItem(item);
+        priceReductionPojo.addItem(item);
 
         // Save changes
         priceReductionRepository.save(priceReductionPojo); // Saves the supplier

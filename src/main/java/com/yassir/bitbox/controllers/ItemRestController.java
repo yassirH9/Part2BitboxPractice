@@ -4,14 +4,11 @@ import com.yassir.bitbox.Services.Item.DefaultItemService;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -68,7 +65,6 @@ public class ItemRestController {
     @PostMapping("/discount/{code}")
     public ResponseEntity<String> addDiscount(@RequestBody PriceReductionDTO priceReductionDTO, @PathVariable Long code){
         try{
-            priceReductionDTO.setStartDate(new Date());
             itemService.addDiscount(code,priceReductionDTO);
             return new ResponseEntity<>("Added", HttpStatus.OK);
         }catch (Exception e){

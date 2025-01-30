@@ -1,6 +1,5 @@
 package com.yassir.bitbox.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yassir.bitbox.enums.UserPrivilegesEnum;
 import lombok.*;

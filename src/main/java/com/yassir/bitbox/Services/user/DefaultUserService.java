@@ -7,7 +7,6 @@ import com.yassir.bitbox.models.user.User;
 import com.yassir.bitbox.repositories.IUserRepository;
 import com.yassir.bitbox.utils.MapperUtility;
 import org.hibernate.HibernateException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

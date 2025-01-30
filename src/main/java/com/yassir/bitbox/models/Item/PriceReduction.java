@@ -33,7 +33,7 @@ public class PriceReduction {
     private Item item;
 
     public void addItem(Item item){
-        if(this.item==null){
+        if(item!=null){
             this.item = item;
         }
     }
