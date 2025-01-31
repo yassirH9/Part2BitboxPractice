@@ -1,12 +1,15 @@
 package com.yassir.bitbox.controllers;
 
 import com.yassir.bitbox.Services.Item.DefaultItemService;
+import com.yassir.bitbox.Services.user.DefaultUserService;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +19,8 @@ import java.util.List;
 public class ItemRestController {
     @Autowired
     private DefaultItemService itemService;
+    @Autowired
+    private DefaultUserService defaultUserService;
 
     @GetMapping("/")
     public List<ItemDTO> getAllItems(@RequestParam String state){
@@ -33,6 +38,8 @@ public class ItemRestController {
     @PostMapping("/save")
     public ResponseEntity<String> saveItem(@RequestBody ItemDTO itemDTO){
         try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            itemDTO.setCreator(defaultUserService.getUser(authentication.getName()));
             itemService.saveItem(itemDTO);
             return new ResponseEntity<>("saved", HttpStatus.OK);
         }catch (Exception e){
