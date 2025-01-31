@@ -1,5 +1,6 @@
 package com.yassir.bitbox.dto.item;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yassir.bitbox.dto.user.UserDTO;
 import com.yassir.bitbox.enums.ItemStateEnum;
 
@@ -16,6 +17,8 @@ import java.util.Set;
 @Builder
 //-------------
 @Data
+//when deserialization this excludes the elements in null, it's practical when send smaller datasets it's needed
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ItemDTO {
     private Long itemCode;
     private String description;

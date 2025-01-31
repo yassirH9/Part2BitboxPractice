@@ -17,9 +17,9 @@ public class ItemRestController {
     @Autowired
     private DefaultItemService itemService;
 
-    @GetMapping("/")
-    public List<ItemDTO> getAllItems(){
-        return itemService.getItems();
+    @GetMapping()
+    public List<ItemDTO> getAllItems(@RequestParam String state,@RequestParam String supplier){
+        return itemService.getItems(state, supplier);
     }
     @GetMapping("/{code}")
     public ResponseEntity<ItemDTO> getItem(@PathVariable Long code){
