@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface IItemRepository extends JpaRepository<Item, Long> {
 
-    @Query("SELECT DISTINCT i FROM Item i " +
-            "LEFT JOIN i.suppliers s " +
-            "WHERE (:state IS NULL OR :state = '' OR i.state = :state) " +
-            "AND (:supplier IS NULL OR :supplier = '' OR s.name = :supplier)")
-    List<Item> findByStateAndSupplier(@Param("state") ItemStateEnum state, @Param("supplier") String supplier);
+//    @Query("SELECT * FROM Item i " +
+//            "WHERE (:state IS NULL OR :state = '' OR i.state = :state)")
+//    List<Item> findByState(@Param("state") ItemStateEnum state);
+    //CREATE FILTER FOR NULL ELEMENTS
+    List<Item> findByState(ItemStateEnum state);
 }

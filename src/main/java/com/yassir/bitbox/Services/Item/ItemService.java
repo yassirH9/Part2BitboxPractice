@@ -7,7 +7,7 @@ import com.yassir.bitbox.dto.item.SupplierDTO;
 import java.util.List;
 
 public interface ItemService {
-    List<ItemDTO> getItems(String state, String supplier);
+    List<ItemDTO> getItems(String state);
     ItemDTO getItemByCode(Long itemCode);
     void addSupplier(Long itemCode, SupplierDTO supplierDTO);
     void addDiscount(Long itemCode, PriceReductionDTO priceReductionDTO);

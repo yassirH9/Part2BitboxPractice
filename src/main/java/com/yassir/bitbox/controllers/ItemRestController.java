@@ -18,8 +18,8 @@ public class ItemRestController {
     private DefaultItemService itemService;
 
     @GetMapping("/")
-    public List<ItemDTO> getAllItems(@RequestParam String state,@RequestParam String supplier){
-        return itemService.getItems(state, supplier);
+    public List<ItemDTO> getAllItems(@RequestParam String state){
+        return itemService.getItems(state);
     }
     @GetMapping("/{code}")
     public ResponseEntity<ItemDTO> getItem(@PathVariable Long code){
