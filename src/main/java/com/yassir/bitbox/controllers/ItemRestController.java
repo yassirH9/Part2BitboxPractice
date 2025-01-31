@@ -17,7 +17,7 @@ public class ItemRestController {
     @Autowired
     private DefaultItemService itemService;
 
-    @GetMapping()
+    @GetMapping("/")
     public List<ItemDTO> getAllItems(@RequestParam String state,@RequestParam String supplier){
         return itemService.getItems(state, supplier);
     }

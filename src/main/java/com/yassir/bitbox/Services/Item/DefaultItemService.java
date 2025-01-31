@@ -38,26 +38,18 @@ public class DefaultItemService implements ItemService{
     @Override
     public List<ItemDTO> getItems(String state, String supplier) {
         List<ItemDTO> result = new ArrayList<>();
-
-        for(Item i: itemRepository.findAll()){
+        ItemStateEnum stateEnum = null;
+        if(state.equals("ACTIVE")){
+            stateEnum = ItemStateEnum.ACTIVE;
+        }else if(state.equals("DISCONTINUED")){
+            stateEnum = ItemStateEnum.DISCONTINUED;
+        }
+        for(Item i: itemRepository.findByStateAndSupplier(stateEnum,supplier)){
             ItemDTO resultToAdd = MapperUtility.toItemDTO(i);
-
-            ItemStateEnum stateEnum = null;
-            switch (state){
-                case "ACTIVE": stateEnum = ItemStateEnum.ACTIVE;
-                case "DISCONTINUED": stateEnum = ItemStateEnum.DISCONTINUED;
-            }
-            if(  supplier.equals("ANY") ||
-                    i.getSuppliers().contains(supplierRepository.findByName(supplier))
-                            &&
-                            i.getState() == stateEnum){
-                result.add(resultToAdd);
-            }
-
             //setting null these elements to avoid the serialization of em in this method
             resultToAdd.setSuppliers(null);
             resultToAdd.setPriceReductions(null);
-
+            result.add(resultToAdd);
         }
         return result;
     }
