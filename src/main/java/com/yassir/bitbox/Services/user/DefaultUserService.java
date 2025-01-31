@@ -8,6 +8,7 @@ import com.yassir.bitbox.repositories.IUserRepository;
 import com.yassir.bitbox.utils.MapperUtility;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,22 +35,25 @@ public class DefaultUserService implements UserService{
 
     @Override
     public void delete(String username) {
-        User user = userRepository.findByuserName(username);
-        if(user !=null){
-            userRepository.delete(user);
-        }else {
-            throw new HibernateException("Unable to delete user with name: "+username);
-        }
-    }
-
-    @Override
-    public boolean isValid(UserDTO userDTO) {
-        return !userDTO.getUserName().isEmpty() ||
-                userDTO.getPrivileges() != null || !userDTO.getPassword().isEmpty();
+        User user = userRepository.findByUserName(username).orElseThrow(
+                ()-> new UsernameNotFoundException("User not found with username: " + username));
+        userRepository.delete(user);
     }
 
     @Override
     public UserDTO getUser(String username) {
-        return MapperUtility.toUserDTO(userRepository.findByuserName(username));
+        return MapperUtility.toUserDTO(userRepository.findByUserName(username)
+                .orElseThrow(()-> new UsernameNotFoundException("User not found with username: " + username)));
     }
+    /**
+     * This method it's used to promote or degrade users, only available for user with admin privileges
+     * **/
+    @Override
+    public void changePrivilegesUser(String username, UserPrivilegesEnum privilegesEnum) {
+        User userTemp = userRepository.findByUserName(username).orElseThrow(
+                ()->new UsernameNotFoundException("User not found with username: " + username));
+        userTemp.setPrivileges(privilegesEnum);
+        userRepository.save(userTemp);
+    }
+
 }

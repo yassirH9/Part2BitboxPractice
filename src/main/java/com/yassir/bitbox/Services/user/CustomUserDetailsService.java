@@ -14,29 +14,22 @@ import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final IUserRepository IUserRepository;
+    private final IUserRepository userRepository;
 
-    public CustomUserDetailsService(IUserRepository IUserRepository) {
-        this.IUserRepository = IUserRepository;
+    public CustomUserDetailsService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
-    public void saveUser(User user){
-        IUserRepository.save(user);
-    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User customUser = IUserRepository.findByuserName(username);
-        if (customUser == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return new org.springframework.security.core.userdetails.User(
-                customUser.getUserName(),
-                customUser.getPassword(),
-                getAuthorities(customUser)
-        );
-    }
-    private Collection<? extends GrantedAuthority> getAuthorities(User customUser) {
-        //the role is get and then turned into a string value to ve verified by the simple auth
-        return Collections.singleton(new SimpleGrantedAuthority(customUser.getPrivileges().toString()));
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUserName())
+                .password(user.getPassword())
+                .authorities(user.getPrivileges().name()) // Use the privileges as authorities
+                .build();
     }
 
 }

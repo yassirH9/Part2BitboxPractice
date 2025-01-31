@@ -23,5 +23,14 @@ public class UserRestController {
             return new ResponseEntity<>("Something went wrong with the request and the user was unable to be created: ", HttpStatus.BAD_REQUEST);
         }
     }
+    @PutMapping("/admin/privileges")
+    public ResponseEntity<String> changeUserPrivileges(@RequestBody UserDTO userDTO){
+        try{
+            userService.changePrivilegesUser(userDTO.getUserName(),userDTO.getPrivileges());
+            return new ResponseEntity<>("Changed user: "+userDTO.getUserName()+" it's now: "+userDTO.getPrivileges(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Something went wrong changin the privileges of the user ERROR: "+e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
