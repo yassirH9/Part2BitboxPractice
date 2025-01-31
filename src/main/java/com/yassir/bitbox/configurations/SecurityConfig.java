@@ -42,7 +42,9 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(
                                 // Disable CSRF for this endpoint
                                 "/api/user/register",
-                                "/h2-console/**")
+                                "/h2-console/**",
+                                "/api/**"
+                                )
                 )
                 .authorizeHttpRequests(auth -> auth
                         //H2 ACCESS TEMPORARY FOR DEBUG
@@ -50,7 +52,7 @@ public class SecurityConfig {
                         //API
                         .requestMatchers("/api/user/register").permitAll() // Public endpoint
                         .requestMatchers("/api/user/admin/**").hasAuthority("ADMIN") // Only users with ADMIN privilege can access
-                        .requestMatchers("/api/**").hasAuthority("USER") // Only users with USER privilege can access
+                        .requestMatchers("/api/**").hasAnyAuthority("USER", "ADMIN") // Only users with USER privilege can access
                         .anyRequest().authenticated() // All other endpoints require authentication
                 )
                 .httpBasic(httpBasic -> {}) // Enable Basic Authentication
@@ -60,29 +62,6 @@ public class SecurityConfig {
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
         return http.build();
-
-
-
-
-//        http
-//                .csrf(csrf -> csrf
-//                        .ignoringRequestMatchers("/api/user/register") // Disable CSRF for this endpoint
-//                )
-//                .authorizeHttpRequests(auth -> auth
-//                        //.requestMatchers("/api/**").permitAll() // Public endpoints
-//                        .requestMatchers("/api/user/register").permitAll() // Public endpoints
-//                        .anyRequest().authenticated() // All other endpoints require authentication
-//                )
-//                .httpBasic(httpBasic -> {}) // Enable Basic Authentication
-//                .userDetailsService(userDetailsService); // Use your custom UserDetailsService
-//        //ROLE BASED CONF
-//        http
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/user/admin/**").hasAuthority("ADMIN") // Only users with ADMIN privilege can access
-//                        .requestMatchers("/api/**").hasAuthority("USER") // Only users with USER privilege can access
-//                        .anyRequest().authenticated()
-//                );
-//        return http.build();
     }
 
     @Bean
