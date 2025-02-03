@@ -64,7 +64,15 @@ public class ItemRestController {
             return new ResponseEntity<>("An exception has occurred during the update process: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PutMapping("/update/itemstate/{code}")
+    public ResponseEntity<String> changeItemState(@PathVariable Long code){
+        try{
+            itemService.changeItemState(code);
+            return new ResponseEntity<>("Updated item state with code: "+code+" successfully", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("An exception has occurred during the update process: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     //--------------------------------------------------------------------------------------------
     //                      ADDERS FOR ITEMS            ++Might need to be in other restcontroller

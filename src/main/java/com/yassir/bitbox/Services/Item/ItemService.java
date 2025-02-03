@@ -14,4 +14,5 @@ public interface ItemService {
     void saveItem(ItemDTO itemDTO);
     void delete(Long itemCode);
     void update(Long itemCode, ItemDTO itemDTO);
+    void changeItemState(Long itemCode);
 }

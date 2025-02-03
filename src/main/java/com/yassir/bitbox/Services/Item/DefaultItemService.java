@@ -87,7 +87,8 @@ public class DefaultItemService implements ItemService{
     @Override
     public void update(Long itemCode, ItemDTO itemDTO) {
         Item itemPojo = itemRepository.findById(itemCode).orElse(null);
-        if(itemPojo != null){
+        //if the pojo it's found and the item retrieved it's not discontinued the item can be modified
+        if(itemPojo != null && itemPojo.getState()!=ItemStateEnum.DISCONTINUED){
             //** temporary
             if (itemDTO.getDescription() != null) {
                 itemPojo.setDescription(itemDTO.getDescription());
@@ -99,7 +100,32 @@ public class DefaultItemService implements ItemService{
                 itemPojo.setState(itemDTO.getState());
             }
             itemRepository.save(itemPojo);
+        }else{
+            throw new HibernateException("The item couldn't be found or it's in 'DISCONTINUED' state and can't be modified");
         }
+    }
+
+    @Override
+    public void changeItemState(Long itemCode) {
+        Item itemPojo = itemRepository.findById(itemCode).orElse(null);
+        //if the pojo it's found and the item retrieved it's not discontinued the item can be modified
+        if(itemPojo != null){
+            //set the opposite state to the item
+            switch(itemPojo.getState()){
+                case ItemStateEnum.ACTIVE:{
+                    itemPojo.setState(ItemStateEnum.DISCONTINUED);
+                    break;
+                }
+                case ItemStateEnum.DISCONTINUED:{
+                    itemPojo.setState(ItemStateEnum.ACTIVE);
+                    break;
+                }
+            }
+        }else{
+            throw new HibernateException("The item couldn't be found");
+        }
+        //save changes
+        itemRepository.save(itemPojo);
     }
 
     @Override
@@ -139,6 +165,10 @@ public class DefaultItemService implements ItemService{
             // Existing supplier (ID provided)
             supplierPojo = supplierRepository.findById(supplierDTO.getSupplierCode())
                     .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + supplierDTO.getSupplierCode()));
+            //logic to verify if the item already has the supplier associated
+            if(item.getSuppliers().contains(supplierPojo)){
+                throw new HibernateException("The supplier it's already added to the item");
+            }
         }
 
         // Add the supplier to the item
