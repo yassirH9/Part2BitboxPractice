@@ -1,5 +1,6 @@
 package com.yassir.bitbox.models.user;
 
+import com.yassir.bitbox.dto.dblogger.DbLoggerDTO;
 import com.yassir.bitbox.enums.UserPrivilegesEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "privileges", nullable = false)
     private UserPrivilegesEnum privileges;
-
 }

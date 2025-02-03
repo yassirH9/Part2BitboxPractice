@@ -1,5 +1,6 @@
 package com.yassir.bitbox.utils;
 
+import com.yassir.bitbox.dto.dblogger.DbLoggerDTO;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
@@ -7,6 +8,7 @@ import com.yassir.bitbox.dto.user.UserDTO;
 import com.yassir.bitbox.models.Item.Item;
 import com.yassir.bitbox.models.Item.PriceReduction;
 import com.yassir.bitbox.models.Item.Supplier;
+import com.yassir.bitbox.models.dblogger.DbLogger;
 import com.yassir.bitbox.models.user.User;
 
 import java.util.stream.Collectors;
@@ -91,5 +93,21 @@ public class MapperUtility {
         user.setPassword(userDTO.getPassword());
         user.setPrivileges(userDTO.getPrivileges());
         return user;
+    }
+    public static DbLogger toLoggerPOJO(DbLoggerDTO dbLoggerDTO){
+        DbLogger logger = new DbLogger();
+        logger.setId(dbLoggerDTO.getId());
+        logger.setUser(toUserPOJO(dbLoggerDTO.getUserDTO()));
+        logger.setItem(toItemPOJO(dbLoggerDTO.getItemDTO()));
+        logger.setReasonMSG(dbLoggerDTO.getReasonMSG());
+        return logger;
+    }
+    public static DbLoggerDTO toLoggerDTO(DbLogger dbLogger){
+        DbLoggerDTO loggerDTO = new DbLoggerDTO();
+        loggerDTO.setId(dbLogger.getId());
+        loggerDTO.setUserDTO(toUserDTO(dbLogger.getUser()));
+        loggerDTO.setItemDTO(toItemDTO(dbLogger.getItem()));
+        loggerDTO.setReasonMSG(dbLogger.getReasonMSG());
+        return loggerDTO;
     }
 }

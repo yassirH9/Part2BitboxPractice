@@ -1,5 +1,6 @@
 package com.yassir.bitbox.Services.Item;
 
+import com.yassir.bitbox.dto.dblogger.DbLoggerDTO;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
@@ -8,12 +9,10 @@ import com.yassir.bitbox.models.Item.Item;
 import com.yassir.bitbox.models.Item.PriceReduction;
 import com.yassir.bitbox.models.Item.Supplier;
 import com.yassir.bitbox.models.user.User;
-import com.yassir.bitbox.repositories.IItemRepository;
-import com.yassir.bitbox.repositories.IPriceReductionRepository;
-import com.yassir.bitbox.repositories.ISupplierRepository;
-import com.yassir.bitbox.repositories.IUserRepository;
+import com.yassir.bitbox.repositories.*;
 import com.yassir.bitbox.utils.MapperUtility;
 import org.hibernate.HibernateException;
+import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,8 @@ public class DefaultItemService implements ItemService{
     private ISupplierRepository supplierRepository;
     @Autowired
     private IPriceReductionRepository priceReductionRepository;
-
+    @Autowired
+    private IDbLoggerRepository loggerRepository;
 
     @Override
     public List<ItemDTO> getItems(String state) {
@@ -106,26 +106,19 @@ public class DefaultItemService implements ItemService{
     }
 
     @Override
-    public void changeItemState(Long itemCode) {
+    public void changeItemState(Long itemCode, DbLoggerDTO dbLoggerDTO) {
         Item itemPojo = itemRepository.findById(itemCode).orElse(null);
         //if the pojo it's found and the item retrieved it's not discontinued the item can be modified
         if(itemPojo != null){
             //set the opposite state to the item
-            switch(itemPojo.getState()){
-                case ItemStateEnum.ACTIVE:{
-                    itemPojo.setState(ItemStateEnum.DISCONTINUED);
-                    break;
-                }
-                case ItemStateEnum.DISCONTINUED:{
-                    itemPojo.setState(ItemStateEnum.ACTIVE);
-                    break;
-                }
-            }
+            itemPojo.setState(ItemStateEnum.DISCONTINUED);
+            dbLoggerDTO.setItemDTO(MapperUtility.toItemDTO(itemPojo));
+            //save changes
+            itemRepository.save(itemPojo);
+            loggerRepository.save(MapperUtility.toLoggerPOJO(dbLoggerDTO));
         }else{
             throw new HibernateException("The item couldn't be found");
         }
-        //save changes
-        itemRepository.save(itemPojo);
     }
 
     @Override

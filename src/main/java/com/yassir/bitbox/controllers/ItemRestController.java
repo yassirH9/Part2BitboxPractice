@@ -2,9 +2,11 @@ package com.yassir.bitbox.controllers;
 
 import com.yassir.bitbox.Services.Item.DefaultItemService;
 import com.yassir.bitbox.Services.user.DefaultUserService;
+import com.yassir.bitbox.dto.dblogger.DbLoggerDTO;
 import com.yassir.bitbox.dto.item.ItemDTO;
 import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,9 +67,16 @@ public class ItemRestController {
         }
     }
     @PutMapping("/update/itemstate/{code}")
-    public ResponseEntity<String> changeItemState(@PathVariable Long code){
+    public ResponseEntity<String> changeItemState(@PathVariable Long code,@RequestBody DbLoggerDTO dbLoggerDTO){
         try{
-            itemService.changeItemState(code);
+            //retrieve the user from the context login
+            if(dbLoggerDTO.getReasonMSG() !=null){
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                dbLoggerDTO.setUserDTO( defaultUserService.getUser(authentication.getName()));
+            }else{
+                return new ResponseEntity<>("To set DISCONTINUED a message with the reason it's need", HttpStatus.BAD_REQUEST);
+            }
+            itemService.changeItemState(code, dbLoggerDTO);
             return new ResponseEntity<>("Updated item state with code: "+code+" successfully", HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("An exception has occurred during the update process: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
