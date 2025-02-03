@@ -52,6 +52,7 @@ public class SecurityConfig {
                         //API
                         .requestMatchers("/api/user/register").permitAll() // Public endpoint
                         .requestMatchers("/api/user/admin/**").hasAuthority("ADMIN") // Only users with ADMIN privilege can access
+                        .requestMatchers("/api/item/delete/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/**").hasAnyAuthority("USER", "ADMIN") // Only users with USER privilege can access
                         .anyRequest().authenticated() // All other endpoints require authentication
                 )

@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class DefaultUserService implements UserService{
     @Autowired
@@ -34,9 +37,9 @@ public class DefaultUserService implements UserService{
     }
 
     @Override
-    public void delete(String username) {
-        User user = userRepository.findByUserName(username).orElseThrow(
-                ()-> new UsernameNotFoundException("User not found with username: " + username));
+    public void delete(Long userid) {
+        User user = userRepository.findById(userid).orElseThrow(
+                ()-> new UsernameNotFoundException("User not found with username: " + userid));
         userRepository.delete(user);
     }
 
@@ -45,6 +48,16 @@ public class DefaultUserService implements UserService{
         return MapperUtility.toUserDTO(userRepository.findByUserName(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found with username: " + username)));
     }
+
+    @Override
+    public List<UserDTO> getUsers() {
+        List<UserDTO> result = new ArrayList<>();
+        for(User u: userRepository.findAll()){
+            result.add(MapperUtility.toUserDTO(u));
+        }
+        return result;
+    }
+
     /**
      * This method it's used to promote or degrade users, only available for user with admin privileges
      * **/

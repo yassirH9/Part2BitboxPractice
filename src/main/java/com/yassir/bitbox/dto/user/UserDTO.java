@@ -1,6 +1,7 @@
 package com.yassir.bitbox.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yassir.bitbox.enums.UserPrivilegesEnum;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 //-------------
 @Data
-@JsonIgnoreProperties(value = {"id","password"}, allowGetters = false, allowSetters = true) //ignore password just in deserialization process
+@JsonIgnoreProperties(value = {"password"}, allowGetters = false, allowSetters = true) //ignore password just in deserialization process
 public class UserDTO {
     private Long id;
     private String userName;
