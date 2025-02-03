@@ -48,6 +48,9 @@ public class ItemRestController {
             return new ResponseEntity<>("Something went wrong with the request and the item was unable to be saved: "+e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    /*
+    * ONLY FOR USERS WITH ADMIN PRIVILEGES
+    * */
     @DeleteMapping("/delete/{code}")
     public ResponseEntity<String> deleteItem(@PathVariable Long code){
         try{

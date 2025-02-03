@@ -16,7 +16,9 @@ import java.util.List;
 public class UserRestController {
     @Autowired()
     private DefaultUserService userService;
-
+    /*
+    * ABLE FOR USER PRIVILEGES ONLY FOR DEBUG FURTHER CHANGES ON SecurityConfig.java
+    * */
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO){
         try{
