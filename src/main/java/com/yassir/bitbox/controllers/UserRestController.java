@@ -9,6 +9,7 @@ import com.yassir.bitbox.repositories.IUserRepository;
 import com.yassir.bitbox.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,7 +38,7 @@ public class UserRestController {
             return new ResponseEntity<>("Something went wrong with the request and the user was unable to be created: ", HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/login")
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> loginUser(@RequestBody AuthRequestDTO authRequestDTO) {
         User user = userRepository.findByUserName(authRequestDTO.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));

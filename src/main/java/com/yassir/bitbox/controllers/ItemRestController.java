@@ -8,6 +8,7 @@ import com.yassir.bitbox.dto.item.PriceReductionDTO;
 import com.yassir.bitbox.dto.item.SupplierDTO;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

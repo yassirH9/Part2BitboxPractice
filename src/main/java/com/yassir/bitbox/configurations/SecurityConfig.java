@@ -29,32 +29,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf
-//                        .ignoringRequestMatchers(
-//                                // Disable CSRF for this endpoint
-//                                "/api/user/register",
-//                                "/h2-console/**",
-//                                "/api/**"
-//                                )
-//                )
-//                .authorizeHttpRequests(auth -> auth
-//                        //H2 ACCESS TEMPORARY FOR DEBUG
-//                        .requestMatchers("/h2-console/**").permitAll()
-//                        //API
-//                        .requestMatchers("/api/user/register").permitAll() // Public endpoint
-//                        .requestMatchers("/api/user/admin/**").hasAuthority("ADMIN") // Only users with ADMIN privilege can access
-//                        .requestMatchers("/api/item/delete/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/api/**").hasAnyAuthority("USER", "ADMIN") // Only users with USER privilege can access
-//                        .anyRequest().authenticated() // All other endpoints require authentication
-//                )
-//                .httpBasic(httpBasic -> {}) // Enable Basic Authentication
-//                .userDetailsService(userDetailsService); // Use your custom UserDetailsService
-//
-//        // Allow frames for H2 Console (needed for H2's embedded UI)
-//        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
-//
-//        return http.build();
         http
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(

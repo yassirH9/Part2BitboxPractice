@@ -1,13 +1,16 @@
 import './styles/App.css';
-import { Counter } from './EXcounterExampleWithRedux/Counter';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import LoginForm from './components/LoginFrom';
 
 function App() {
   return (  
-    <div className="App">
-    <header className="App-header">
-      <Counter />
-    </header>
-  </div>
+    <Router>
+    <Routes>
+      <Route path="/login" element={<LoginForm />} />
+      {/* Add other routes here */}
+    </Routes>
+  </Router>
   );
 }
 
