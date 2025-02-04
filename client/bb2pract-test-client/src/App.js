@@ -1,5 +1,5 @@
-import './App.css';
-import { Counter } from './counterExampleWithRedux/Counter';
+import './styles/App.css';
+import { Counter } from './EXcounterExampleWithRedux/Counter';
 
 function App() {
   return (  

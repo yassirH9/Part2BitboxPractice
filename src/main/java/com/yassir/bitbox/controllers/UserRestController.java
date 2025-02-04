@@ -2,11 +2,18 @@ package com.yassir.bitbox.controllers;
 
 import com.yassir.bitbox.Services.user.DefaultUserService;
 
+import com.yassir.bitbox.dto.auth.AuthRequestDTO;
 import com.yassir.bitbox.dto.user.UserDTO;
-import jakarta.websocket.server.PathParam;
+import com.yassir.bitbox.models.user.User;
+import com.yassir.bitbox.repositories.IUserRepository;
+import com.yassir.bitbox.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 public class UserRestController {
-    @Autowired()
-    private DefaultUserService userService;
+    @Autowired private DefaultUserService userService;
+    @Autowired private JwtUtils jwtUtils;
+    @Autowired private BCryptPasswordEncoder passwordEncoder;
+    @Autowired private IUserRepository userRepository;
     /*
     * ABLE FOR USER PRIVILEGES ONLY FOR DEBUG FURTHER CHANGES ON SecurityConfig.java
     * */
@@ -28,6 +37,27 @@ public class UserRestController {
             return new ResponseEntity<>("Something went wrong with the request and the user was unable to be created: ", HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody AuthRequestDTO authRequestDTO) {
+        User user = userRepository.findByUserName(authRequestDTO.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
+
+        if (passwordEncoder.matches(authRequestDTO.getPassword(), user.getPassword())) {
+            UserDetails userDetails = org.springframework.security.core.userdetails.User
+                    .withUsername(user.getUserName())
+                    .password(user.getPassword())
+                    .authorities(user.getPrivileges().name())
+                    .build();
+
+            String token = jwtUtils.generateToken(userDetails);
+            return ResponseEntity.ok(token);
+        } else {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+    }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------
     @PutMapping("/admin/privileges")
     public ResponseEntity<String> changeUserPrivileges(@RequestBody UserDTO userDTO){
         try{
@@ -50,7 +80,7 @@ public class UserRestController {
     @GetMapping("/admin/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         try{
-            return new ResponseEntity<>(userService.getUsers(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
