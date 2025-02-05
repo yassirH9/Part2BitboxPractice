@@ -12,8 +12,8 @@ export const login = createAsyncThunk(
       });
       
       
-      const data = await response.text();
-      // console.log("[DEBUG] JWT TOKEN : "+data);
+      const data = await response.json();
+      console.log("[DEBUG] JWT TOKEN : "+data);
       if (!response.ok) throw new Error(data.message || 'Login failed');
       return data;
     } catch (error) {

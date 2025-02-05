@@ -62,6 +62,15 @@ public class UserRestController {
         }
     }
 
+    @PostMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestBody AuthResponseDTO token){//re-using responseDTO for deserialization of the token sent by the client
+        if(jwtUtils.validateToken(token.getToken())){
+            return new ResponseEntity<>("Token status: VALID", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Token status: NOT VALID", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------
     @PutMapping("/admin/privileges")

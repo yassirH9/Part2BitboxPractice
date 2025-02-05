@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import InteractiveTable from '../components/InteractiveTable ';
+import NavBar from '../components/NavBar';
 
 
 const ItemView = () => {
@@ -14,6 +15,7 @@ const ItemView = () => {
   };
   return (
     <div>
+      <NavBar />
       <InteractiveTable headers={initialState.headers} data={initialState.data} />
     </div>
   );

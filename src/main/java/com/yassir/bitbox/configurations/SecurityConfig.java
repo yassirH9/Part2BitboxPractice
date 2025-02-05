@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(
                                 "/api/user/register",
                                 "/api/user/login",
+                                "/api/user/validate",
                                 "/h2-console/**"
 
                         )
@@ -41,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/user/login").permitAll()
+                        .requestMatchers("/api/user/validate").permitAll()
                         .requestMatchers("/api/user/register").permitAll()
                         .requestMatchers("/api/user/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/item/delete/**").hasAuthority("ADMIN")

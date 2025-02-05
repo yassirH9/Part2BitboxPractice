@@ -1,7 +1,7 @@
 import './styles/App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import LoginForm from './pages/LoginFrom';
+import LoginForm from './pages/LoginForm';
 import ItemView from './pages/ItemView';
 function App() {
   return (  

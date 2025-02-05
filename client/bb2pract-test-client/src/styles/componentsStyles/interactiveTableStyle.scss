@@ -1,6 +1,7 @@
 @import '../variables';
 
 .table-responsive {
+    margin-top: 1.5em;
     width: 100%;
     overflow-x: auto;
 }
@@ -17,8 +18,9 @@
 }
 
 .interactive-table th {
-    background-color: rgba($primary-color, 0.30);
+    background-color: rgba($bg-box-color, 0.30);
     color: $primary-font-color;
     font-family: $font-stack;
+    font-size: 1rem;
     text-align: center;
 }
