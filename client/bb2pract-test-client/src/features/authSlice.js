@@ -1,4 +1,3 @@
-// store/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 //async thunk for login
@@ -14,7 +13,7 @@ export const login = createAsyncThunk(
       
       
       const data = await response.text();
-      console.log("[DEBUG] JWT TOKEN : "+data);
+      // console.log("[DEBUG] JWT TOKEN : "+data);
       if (!response.ok) throw new Error(data.message || 'Login failed');
       return data;
     } catch (error) {
@@ -27,14 +26,18 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
+    role: null,
     token: null,
     isLoading: false,
+    isLogged: false,
     error: null,
   },
   reducers: {
     logout: (state) => {
+      state.role = null;
       state.user = null;
       state.token = null;
+      state.isLogged = false;
     },
   },
   extraReducers: (builder) => {
@@ -45,8 +48,10 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.user = action.payload.username;
         state.token = action.payload.token;
+        state.role = action.payload.userrole;
+        state.isLogged = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;

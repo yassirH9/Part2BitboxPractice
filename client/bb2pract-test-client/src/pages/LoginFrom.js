@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error } = useSelector((state) => state.auth);
+  const { isLoading, error, token, isLogged } = useSelector((state) => state.auth);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,6 +14,10 @@ const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ username, password }));
+    //TEMPORARY
+    if(isLogged){
+      navigate('/items');
+    }
   };
 
   return (

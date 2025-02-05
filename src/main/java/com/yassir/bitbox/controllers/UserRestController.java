@@ -3,6 +3,7 @@ package com.yassir.bitbox.controllers;
 import com.yassir.bitbox.Services.user.DefaultUserService;
 
 import com.yassir.bitbox.dto.auth.AuthRequestDTO;
+import com.yassir.bitbox.dto.auth.AuthResponseDTO;
 import com.yassir.bitbox.dto.user.UserDTO;
 import com.yassir.bitbox.models.user.User;
 import com.yassir.bitbox.repositories.IUserRepository;
@@ -39,7 +40,7 @@ public class UserRestController {
         }
     }
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> loginUser(@RequestBody AuthRequestDTO authRequestDTO) {
+    public ResponseEntity<AuthResponseDTO> loginUser(@RequestBody AuthRequestDTO authRequestDTO) {
         User user = userRepository.findByUserName(authRequestDTO.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
 
@@ -50,8 +51,12 @@ public class UserRestController {
                     .authorities(user.getPrivileges().name())
                     .build();
 
-            String token = jwtUtils.generateToken(userDetails);
-            return ResponseEntity.ok(token);
+            AuthResponseDTO response = new AuthResponseDTO(
+                    jwtUtils.generateToken(userDetails),
+                    user.getUserName(),
+                    user.getPrivileges().name()
+            );
+            return ResponseEntity.ok(response);
         } else {
             throw new BadCredentialsException("Invalid username or password");
         }

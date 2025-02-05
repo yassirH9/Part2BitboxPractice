@@ -1,17 +1,15 @@
-$primary-color: #5a912e;
-$error-color: #e74c3c;
-$font-stack: 'Arial', sans-serif;
+@import 'variables';
 
 .flex-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f4f4;
+  background-color: $bg-color-light;
   padding: 1rem;
 
   .login-form {
-    background: #fff;
+    background: $bg-box-color;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
