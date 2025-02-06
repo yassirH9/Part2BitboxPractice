@@ -5,7 +5,14 @@
     width: 100%;
     overflow-x: auto;
 }
-
+.table-row {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: lighten($primary-color, 40%);
+    }
+  }
 .interactive-table {
     width: 100%;
     border-collapse: collapse;

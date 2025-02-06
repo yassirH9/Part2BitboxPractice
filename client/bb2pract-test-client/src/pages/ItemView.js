@@ -9,15 +9,18 @@ const ItemView = () => {
   const items = useSelector((state) => state.item.items); // Access items from the item slice
   
   useEffect(() => {
-    dispatch(getItems("ACTIVE")); // Fetch items with state 'ACTIVE'
+    dispatch(getItems("")); // Fetch items with state 'ACTIVE'
   }, [dispatch]);
   
-  const headers = ['itemCode', 'description', 'price', 'state'];
+  // const headers = ['itemCode', 'description', 'price', 'state'];
+  const headers = items.length > 0 ? Object.keys(items[0]) : [];
   const data = items.map(item => ({
     itemCode: item.itemCode,
     description: item.description,
-    price: item.price,
+    price: item.price+" €",
     state: item.state,
+    creationDate: item.creationDate,
+    creator: item.creator.userName,
   }));
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import '../styles/componentsStyles/navBar.scss'; // Import SCSS for styling
@@ -8,9 +8,11 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const { user, role } = useSelector((state) => state.auth);
   const [menuVisible, setMenuVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/');
   };
 
   const toggleMenu = () => {
@@ -33,9 +35,6 @@ const NavBar = () => {
           <>
             <li>
               <NavLink to="/user-dashboard" activeClassName="active">User Dashboard</NavLink>
-            </li>
-            <li>
-              <NavLink to="/profile" activeClassName="active">Profile</NavLink>
             </li>
           </>
         )}

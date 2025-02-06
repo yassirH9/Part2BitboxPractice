@@ -9,7 +9,7 @@ function App() {
     <Routes>
       <Route path="/" element={<LoginForm />} />
       <Route path="/items" element={<ItemView/>}/>
-      {/* Add other routes here */}
+      {/* <Route path="/items/:id" element={<ItemDetails />} /> Item details route */}
     </Routes>
   </Router>
   );
