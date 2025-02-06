@@ -6,7 +6,9 @@ export const login = createAsyncThunk(
     try {
       const response = await fetch('http://192.168.25.68:8080/api/user/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(credentials),
       });
       

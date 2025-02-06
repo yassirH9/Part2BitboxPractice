@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/componentsStyles/interactiveTableStyle.scss';
-import { setTableData, setTableHeaders } from '../features/tableSlice';
 
 const InteractiveTable = ({ headers, data }) => { 
     const renderTableHeader = () => {

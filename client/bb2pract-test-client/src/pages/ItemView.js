@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
-import InteractiveTable from '../components/InteractiveTable ';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import InteractiveTable from '../components/InteractiveTable';
 import NavBar from '../components/NavBar';
-
+import { getItems } from '../service/ItemService';
 
 const ItemView = () => {
-  const initialState = {
-    headers: ['test1', 'test2', 'test3'],
-    data: [
-      { test1: 'Row1 Col1', test2: 'Row1 Col2', test3: 'Row1 Col3' },
-      { test1: 'Row2 Col1', test2: 'Row2 Col2', test3: 'Row2 Col3' },
-      //TEST Add more rows as needed
-    ],
-  };
+  const dispatch = useDispatch();
+  const items = useSelector(state => state.items); // Assuming items are stored in the state
+  console.log(items);
+  
+  useEffect(() => {
+    dispatch(getItems("")); // Fetch items with state 'ACTIVE'
+  }, [dispatch]);
+
+  const headers = ['itemCode', 'description', 'price', 'state'];
+  // const data = items.map(item => ({
+  //   itemCode: item.itemCode,
+  //   description: item.description,
+  //   price: item.price,
+  //   state: item.state,
+  // }));
+
   return (
     <div>
       <NavBar />
-      <InteractiveTable headers={initialState.headers} data={initialState.data} />
+      {/* <InteractiveTable headers={headers} data={data} /> */}
     </div>
   );
 };
