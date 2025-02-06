@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../styles/componentsStyles/interactiveTableStyle.scss';
 import { setTableData, setTableHeaders } from '../features/tableSlice';
 
-const InteractiveTable = ({ headers, data }) => {
+const InteractiveTable = ({ headers, data }) => { 
     const renderTableHeader = () => {
         //test data entry to component table
         return headers.map((header, index) => (

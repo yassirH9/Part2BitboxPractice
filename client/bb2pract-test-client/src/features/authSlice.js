@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
 //async thunk for login
 export const login = createAsyncThunk(
   'auth/login',
@@ -13,7 +12,7 @@ export const login = createAsyncThunk(
       
       
       const data = await response.json();
-      console.log("[DEBUG] JWT TOKEN : "+data);
+      console.log("[DEBUG] JWT TOKEN : "+data.token);
       if (!response.ok) throw new Error(data.message || 'Login failed');
       return data;
     } catch (error) {

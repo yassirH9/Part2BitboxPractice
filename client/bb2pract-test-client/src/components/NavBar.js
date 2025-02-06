@@ -19,7 +19,7 @@ const NavBar = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">MyApp</div>
+      <div className="navbar-brand">BB2P</div>
       <ul className="nav-links">
         <li>
           <NavLink exact to="/items" activeClassName="active">Item Catalog</NavLink>

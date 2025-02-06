@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import InteractiveTable from '../components/InteractiveTable ';
 import NavBar from '../components/NavBar';
 
