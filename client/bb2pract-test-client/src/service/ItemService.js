@@ -1,16 +1,23 @@
-export const getItems = (state) => {
-    return (dispatch, getState) => {
-        const token = getState().auth.token; // Get the token from the auth slice
-        return fetch('http://192.168.25.68:8080/api/items/?state=' + state, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Include the token in the Autvhorization header
-            }
-        })
-            .then(response => response.json())
-            .then(json => {
-                dispatch({ type: 'GET_ITEMS', payload: json });
-            });
-    };
-};
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
+export const getItems = createAsyncThunk(
+  'item/getall',
+  async (state, { getState, rejectWithValue }) => {
+    const token = getState().auth.token; // Get the token from the auth slice
+    try {
+      const response = await fetch(`http://localhost:8080/api/item/?state=${state}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'fetch failed');
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);

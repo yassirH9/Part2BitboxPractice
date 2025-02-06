@@ -6,25 +6,24 @@ import { getItems } from '../service/ItemService';
 
 const ItemView = () => {
   const dispatch = useDispatch();
-  const items = useSelector(state => state.items); // Assuming items are stored in the state
-  console.log(items);
+  const items = useSelector((state) => state.item.items); // Access items from the item slice
   
   useEffect(() => {
-    dispatch(getItems("")); // Fetch items with state 'ACTIVE'
+    dispatch(getItems("ACTIVE")); // Fetch items with state 'ACTIVE'
   }, [dispatch]);
-
+  
   const headers = ['itemCode', 'description', 'price', 'state'];
-  // const data = items.map(item => ({
-  //   itemCode: item.itemCode,
-  //   description: item.description,
-  //   price: item.price,
-  //   state: item.state,
-  // }));
+  const data = items.map(item => ({
+    itemCode: item.itemCode,
+    description: item.description,
+    price: item.price,
+    state: item.state,
+  }));
 
   return (
     <div>
       <NavBar />
-      {/* <InteractiveTable headers={headers} data={data} /> */}
+      <InteractiveTable headers={headers} data={data} />
     </div>
   );
 };

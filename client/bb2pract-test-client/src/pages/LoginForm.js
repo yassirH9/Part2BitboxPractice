@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/authSlice';
 import "../styles/login.scss";
-import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const { isLoading, error, token, isLogged } = useSelector((state) => state.auth);
 
   const [username, setUsername] = useState('');
@@ -13,11 +14,8 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
-    //TEMPORARY
-    if(isLogged){
-      navigate('/items');
-    }
+    const credentials = { username, password };
+    dispatch(login({ credentials, navigate }));
   };
 
   return (

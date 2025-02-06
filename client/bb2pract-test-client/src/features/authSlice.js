@@ -1,21 +1,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 //async thunk for login
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials, { rejectWithValue }) => {
+  async ({credentials, navigate}, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://192.168.25.68:8080/api/user/login', {
+      const response = await fetch('http://localhost:8080/api/user/login', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
       });
-      
-      
+
       const data = await response.json();
       console.log("[DEBUG] JWT TOKEN : "+data.token);
-      if (!response.ok) throw new Error(data.message || 'Login failed');
+      if (!response.ok){
+        throw new Error(data.message || 'Login failed');
+      } else{
+        navigate('/items');
+      }
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
