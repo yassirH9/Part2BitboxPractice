@@ -1,34 +1,47 @@
 @import '../variables';
 
-.table-responsive {
-    margin: 1.5em;
-    // width: 100%;
-    overflow-x: auto;
-    border: 1px solid $border-color-light;
-}
-.table-row {
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  
-    &:hover {
-      background-color: lighten($primary-color, 40%);
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
+
+.table-responsive {
+  margin: 1.5em;
+  // width: 100%;
+  overflow-x: auto;
+  max-height: 50vh;
+  border: 1px solid $border-color-light;
+}
+
+.table-row {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  animation: fadeIn 0.5s ease-in-out;
+
+  &:hover {
+    background-color: lighten($primary-color, 40%);
+  }
+}
+
 .interactive-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .interactive-table th,
 .interactive-table td {
-    border: 1px solid $border-color-light;
-    padding: 8px;
+  border: 1px solid $border-color-light;
+  padding: 8px;
 }
 
 .interactive-table th {
-    background-color: rgba($bg-box-color, 0.30);
-    color: $primary-font-color;
-    font-family: $font-stack;
-    font-size: 1rem;
-    text-align: center;
+  background-color: rgba($bg-box-color, 0.30);
+  color: $primary-font-color;
+  font-family: $font-stack;
+  font-size: 1rem;
+  text-align: center;
 }

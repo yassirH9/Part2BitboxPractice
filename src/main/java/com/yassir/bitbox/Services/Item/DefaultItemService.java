@@ -177,7 +177,7 @@ public class DefaultItemService implements ItemService{
 
     @Override
     public void addDiscount(Long itemCode, PriceReductionDTO priceReductionDTO) {
-        priceReductionDTO.setStartDate(new Date());
+//        priceReductionDTO.setStartDate(new Date());
         // Fetch the item by its ID
         Item item = itemRepository.findById(itemCode)
                 .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemCode));

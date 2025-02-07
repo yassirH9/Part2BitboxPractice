@@ -1,0 +1,63 @@
+@import './_variables.scss';
+
+form {
+    margin: 1.5rem;
+    border: 1px solid $border-color-light;
+    padding: 0.5rem;
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    button{
+        margin-top: 2rem;
+        max-height: 2.75rem;
+        background-color: lighten($primary-color, 20%);
+        border: .5px solid $border-color-light;
+        &:hover{
+            color: #ffffff;
+        }
+    }
+    .delete-button{
+        background-color: $error-color;
+        border: .5px solid $border-color-light;
+    }
+
+}
+
+.form-group {
+    flex: 1 1 calc(33.333% - 16px);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 8px;
+    font-size: 16px;
+}
+h3{
+    margin-left: 1.5rem;
+}
+.list-box{
+    border: .5px solid $border-color-light;
+    padding: 1.5rem;
+}
+.reload-button{
+    background-color: lighten($primary-color, 40%);
+    border: .5px solid $border-color-light;
+    margin-top: .5rem;
+    margin-left: 1.5rem;
+    &:hover{
+        color: #ffffff;
+    }
+    img{
+        width: 2rem;
+        height: 2rem;
+    }
+}

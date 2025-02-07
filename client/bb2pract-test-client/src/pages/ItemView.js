@@ -17,7 +17,9 @@ const ItemView = () => {
   const handleStateChange = (event) => {
     setItemState(event.target.value);
   };
-
+  const handleReload = (e) => {
+    dispatch(getItems(itemState));
+  };
   const headers = items.length > 0 ? Object.keys(items[0]) : [];
   const data = items.map(item => ({
     itemCode: item.itemCode,
@@ -33,13 +35,16 @@ const ItemView = () => {
       <NavBar />
       <div className="filters">
         <div className="filter">
-        <h6>Filters</h6>
-        <label htmlFor="itemState">Select Item State:</label>
-        <select id="itemState" value={itemState} onChange={handleStateChange}>
-        <option value="">---</option>
-          <option value="ACTIVE">ACTIVE</option>
-          <option value="DISCONTINUED">DISCONTINUED</option>
-        </select>
+          <h6>Filters</h6>
+          <button type="button" onClick={handleReload} className="reload-button">
+            <img src="/refresh.png" alt="Reload" className="reload-icon" />
+          </button>
+          <label htmlFor="itemState">Select Item State:</label>
+          <select id="itemState" value={itemState} onChange={handleStateChange}>
+            <option value="">---</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="DISCONTINUED">DISCONTINUED</option>
+          </select>
         </div>
       </div>
       <InteractiveTable headers={headers} data={data} />

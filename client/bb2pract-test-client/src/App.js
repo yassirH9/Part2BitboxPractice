@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<LoginForm />} />
         {/* PRIUVATE ROUTES */}
         <Route path="/items" element={<PrivateRoute element={ItemView} />} />
-        <Route path="/items/:id" element={<PrivateRoute element={ItemDetails} />} />
+        <Route path="/items/:itemCode" element={<PrivateRoute element={ItemDetails} />} />
       </Routes>
     </Router>
   );

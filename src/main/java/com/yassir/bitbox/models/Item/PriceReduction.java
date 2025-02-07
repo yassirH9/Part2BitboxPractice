@@ -23,7 +23,7 @@ public class PriceReduction {
     @Column(name = "reducedPrice", nullable = false)
     private Double reducedPrice;
     @Column(name = "startDate", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date startDate;
     @Column(name = "finishDate", nullable = false)
     @Temporal(TemporalType.DATE)
