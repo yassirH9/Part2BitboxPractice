@@ -34,9 +34,10 @@ public class SecurityConfig {
         http    .cors(AbstractHttpConfigurer::disable)
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(
-                                "/api/user/register",
-                                "/api/user/login",
-                                "/api/user/validate",
+//                                "/api/user/register",
+//                                "/api/user/login",
+//                                "/api/user/validate",
+                                "/api/**",
                                 "/h2-console/**"
 
                         )
