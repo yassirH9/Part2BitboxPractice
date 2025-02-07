@@ -12,6 +12,7 @@
   .navbar-brand {
     font-size: 1.5rem;
     font-weight: bold;
+    margin-left: 1rem;
   }
 
   .nav-links {
@@ -29,7 +30,7 @@
         font-size: 1.1rem;
         transition: color 0.3s ease;
 
-        &.active,
+        // &.active,
         &:hover {
           color: #ffffff; // Change to grey on hover
         }
@@ -49,7 +50,7 @@
       display: flex;
       align-items: center;
       transition: color 0.3s ease;
-
+      margin-right: 1rem;
       &:hover {
         color: #ffffff; // Change to grey on hover
       }
