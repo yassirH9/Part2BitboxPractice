@@ -61,11 +61,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public CustomUserDetailsService userDetailsService() {
-//        return new CustomUserDetailsService(IUserRepository);
-//    }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
